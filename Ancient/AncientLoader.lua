@@ -29,123 +29,107 @@
 ]]
 
 if not game:IsLoaded() then
-    repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game:IsLoaded()
 end
 
-local keyFile = "AncientKeySaver.txt"
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/welomenchaina/MainProjects/refs/heads/main/Ancient/ObsidianUiLibrary.lua",true))()
 
-local luarmor = loadstring(game:HttpGet("https://sdkapi-public.luarmor.net/library.lua"))()
-luarmor.script_id = "f42f3746fb3eb60f837d3673581c14a6"
-
-local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/welomenchaina/MainProjects/refs/heads/main/Ancient/ObsidianUiLibrary.lua", true))()
-
-local window = UI:CreateWindow({
+local Window = Library:CreateWindow({
     Title = "Ancient Key System",
     Footer = "Ancient Script",
     ToggleKeybind = Enum.KeyCode.RightControl,
     Center = true,
     AutoShow = true,
-    Resizable = true,
+    Resizable = false,
     Size = UDim2.fromOffset(700, 500)
 })
 
-local keyTab = window:AddKeyTab("Key System")
-local infoTab = window:AddTab("Info", "info")
-local settingsTab = window:AddTab("UI", "settings")
-
-keyTab:AddLabel({ Text = "Ancient Key System", Size = 36, DoesWrap = true })
-
-local function saveKey(key)
-    if writefile then
-        writefile(keyFile, key)
-    end
-end
-
-local function notify(msg, duration)
-    UI:Notify(msg, duration or 4)
-end
-
-local function checkKey(key)
-    local res = luarmor.check_key(key)
-    if res.code == "KEY_VALID" then
-        notify("Key accepted! Welcome aboard.", 5)
-        saveKey(key)
-        return true
-    elseif res.code == "KEY_HWID_LOCKED" then
-        notify("That key's linked to another device. Reset it via the bot.", 5)
-    elseif res.code == "KEY_INCORRECT" then
-        notify("Nope, that key's invalid or deleted.", 5)
-    elseif res.code == "KEY_EXPIRED" then
-        notify("Your key expired. Time to get a new one!", 5)
-    else
-        notify("Key check failed: " .. res.message .. " (" .. res.code .. ")", 5)
-    end
-    return false
-end
+local KeyTab = Window:AddKeyTab("Key System")
+local InfoTab = Window:AddTab("Info", "info")
+local UiTab = Window:AddTab("UI", "settings")
 
 
-local savedKey
-if pcall(function() savedKey = readfile(keyFile) end) and savedKey and savedKey ~= "" then
-    if checkKey(savedKey) then
-        keyTab:SetKeyBoxValue(savedKey)
-    else
-        notify("Saved key no good anymore. Please update.", 5)
-    end
-end
 
-keyTab:AddKeyBox("", function(input)
-    checkKey(input)
+KeyTab:AddLabel({
+    Text = "Ancient\nEnter Your Key Below",
+    DoesWrap = true,
+    Size = 36,
+})
+
+KeyTab:AddKeyBox(savedKey, function(_, UserKey)
+    writefile("AncientKey.txt", UserKey)
+    local code = 'script_key="'..UserKey..'";loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/a20bdcf420255424197e2a78fecfc155.lua"))()'
+    Library:Unload()
+    loadstring(code)()
 end)
 
-keyTab:AddLabel({
-    Text = "\nNo key? Check the <font color='rgb(0, 195, 255)'>Info</font> tab!",
+KeyTab:AddLabel({
+    Text = "\nDon't have the key? Go to the Info Tab!",
     DoesWrap = true,
-    Size = 16
+    Size = 16,
 })
 
-local leftBox = infoTab:AddLeftGroupbox("How to Get Your Key", "key")
-leftBox:AddLabel({
-    Text = "Click the button below to get your key!",
+local LeftGroupbox = InfoTab:AddLeftGroupbox("How To Get Key", "key")
+
+LeftGroupbox:AddLabel({
+    Text = "Click a button to copy the key link to clipboard.",
     DoesWrap = true
 })
 
-leftBox:AddButton({
-    Text = "<font color='rgb(255, 172, 28)'>Get Key</font>",
+LeftGroupbox:AddButton({
+    Text = "<font color='rgb(255, 172, 28)'>Get Key (Work.Ink)</font>",
     Func = function()
         setclipboard("https://ads.luarmor.net/get_key?for=Ancient_Script-XaLtYHBtNJBV")
-        notify("Copied! Enter This Inside Your Browser!", 3)
     end
 })
 
-local rightBox = infoTab:AddRightGroupbox("Help", "info")
-rightBox:AddLabel({
-    Text = "Trouble getting a key? Copy our Discord link and ask for help!",
+
+
+local RightGroupbox = InfoTab:AddRightGroupbox("Help & Support", "info")
+
+RightGroupbox:AddLabel({
+    Text = "Having issues? Copy our Discord.",
     DoesWrap = true
 })
-rightBox:AddButton({
+
+RightGroupbox:AddButton({
     Text = "Copy Discord",
     Func = function()
-        setclipboard("https://discord.gg/your-discord-link")
-        notify("Discord link copied!", 3)
+        setclipboard("https://discord.gg/246JErU4kT")
     end
 })
 
-local uiBox = settingsTab:AddLeftGroupbox("Menu", "settings")
-local keyLabel = uiBox:AddLabel("Menu Bind")
-keyLabel:AddKeyPicker("MyKeybind", {
+local UIGroupbox = UiTab:AddLeftGroupbox("Menu", "settings")
+
+local KeyLabel = UIGroupbox:AddLabel("Menu Bind")
+
+KeyLabel:AddKeyPicker("MenuKeybind", {
     Default = "MB2",
-    Text = "Menu Bind",
+    Text = "Toggle UI",
     Mode = "Toggle",
     SyncToggleState = false,
-    Callback = function()
-        UI:Unload()
+    Callback = function(Value)
+        Library:Unload()
     end
 })
 
-uiBox:AddButton({
-    Text = "Close Ancient Script",
+UIGroupbox:AddButton({
+    Text = "Unload UI",
     Func = function()
-        UI:Unload()
-    end,
-    DoubleClick = false
+        Library:Unload()
+    end
 })
+
+
+local savedKey = "AncientKey"
+if isfile("AncientKey.txt") then
+    savedKey = readfile("AncientKey.txt")
+    local code = 'script_key="'..savedKey..'";loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/a20bdcf420255424197e2a78fecfc155.lua"))()'
+    loadstring(code)()
+	getgenv().UsingTxtKey = true
+    return
+end
+
+if getgenv().UsedTxtKey then
+Library:Unload()
+end
