@@ -73,3 +73,9 @@ if enabledsys then
         Tag("StinkyMan", Color3.fromRGB(85, 93, 35), "Asshole", "Shitman")
     end
 end
+
+if enabledsys then
+if id == 8888015275 and hwid == "75E6415A-C824-4F9B-A4E7-6C04413AA95F" then
+Tag("Owner", Color3.fromRGB(60, 110, 130), "Waylon", "Founder")
+    end
+end
