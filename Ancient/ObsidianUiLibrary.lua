@@ -5630,7 +5630,7 @@ function Library:CreateWindow(WindowInfo)
                 BorderSizePixel = 1,
                 Position = UDim2.fromScale(1, 0),
                 Size = UDim2.new(0, 63, 1, 0),
-                Text = "Execute",
+                Text = "Check Key",
                 TextSize = 14,
                 Parent = Holder,
             })
