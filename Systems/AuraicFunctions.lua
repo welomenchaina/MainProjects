@@ -1,13 +1,25 @@
 getgenv().jumpPowerEnabled = getgenv().jumpPowerEnabled or false
 getgenv().jumpPowerConn = getgenv().jumpPowerConn or nil
+getgenv().
 
 
 
+local workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
 local funcs = {}
 local plr = game.Players.LocalPlayer
 local char = plr.Character or plr.CharacterAdded:Wait()
 local hum = char:WaitForChild("Humanoid")
+
+getgenv().Presets = {
+    Speed = hum.Walkspeed or 16,
+    Gravity = workspace.Gravity or 196.2,
+    Health = hum.Health or 1000
+}
+
+
+
+
 
 getgenv().toggleJumpPower = function()
     getgenv().jumpPowerEnabled = not getgenv().jumpPowerEnabled
@@ -197,6 +209,29 @@ function funcs:Kick(message)
     game:FindService("Players"):ClearAllChildren()
     plr:Kick(message)
 end
+
+function funcs:GetServices()
+	funcs.RunService = game:GetService("RunService")
+	funcs.Players = game:GetService("Players")
+	funcs.ReplicatedStorage = game:GetService("ReplicatedStorage")
+	funcs.UserInputService = game:GetService("UserInputService")
+	funcs.TweenService = game:GetService("TweenService")
+	funcs.ContextActionService = game:GetService("ContextActionService")
+	funcs.StarterGui = game:GetService("StarterGui")
+	funcs.TeleportService = game:GetService("TeleportService")
+	funcs.Lighting = game:GetService("Lighting")
+	funcs.SoundService = game:GetService("SoundService")
+	funcs.Debris = game:GetService("Debris")
+	funcs.HttpService = game:GetService("HttpService")
+	funcs.StarterPack = game:GetService("StarterPack")
+	funcs.ServerStorage = game:GetService("ServerStorage")
+	funcs.ServerScriptService = game:GetService("ServerScriptService")
+	funcs.Workspace = game:GetService("Workspace")
+	funcs.GuiService = game:GetService("GuiService")
+	funcs.CoreGui = game:GetService("CoreGui")
+end
+
+
 
 
 
