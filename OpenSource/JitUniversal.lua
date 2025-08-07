@@ -108,7 +108,7 @@ local ResetButton = Player:CreateButton({
     end
 })
 
-local TpToolGiver = Tab:CreateInput({
+local TpToolGiver = Player:CreateInput({
     Name = "Tp-Tool Giver",
     PlaceholderText = "Name Of Tool",
     CurrentValue = "TpTool",
@@ -116,11 +116,44 @@ local TpToolGiver = Tab:CreateInput({
     Enter = false,
     Callback = function(Text)
         if not Text or Text == "" then return end
+
         local tool = Instance.new("Tool")
+        tool.RequiresHandle = false
         tool.Name = Text
+
+        local function teleportTo(pos)
+            local char = plr.Character
+            if char and char:FindFirstChild("HumanoidRootPart") then
+                char:PivotTo(CFrame.new(pos + Vector3.new(0, 5, 0)))
+            end
+        end
+
+        tool.Activated:Connect(function()
+            local mouse = plr:GetMouse()
+            local conn1, conn2
+
+            conn1 = game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
+                if gpe then return end
+                if input.UserInputType == Enum.UserInputType.Touch then
+                    local ray = workspace.CurrentCamera:ScreenPointToRay(input.Position.X, input.Position.Y)
+                    local part, pos = workspace:FindPartOnRayWithIgnoreList(Ray.new(ray.Origin, ray.Direction * 1000), {plr.Character})
+                    if pos then teleportTo(pos) end
+                    conn1:Disconnect()
+                end
+            end)
+
+            conn2 = mouse.Button1Down:Connect(function()
+                local hit = mouse.Hit
+                if hit then teleportTo(hit.Position) end
+                conn2:Disconnect()
+            end)
+        end)
+
         tool.Parent = plr.Backpack
     end
 }, "tptoolgiver")
+
+
 
 
 local SpeedChanger = Player:CreateSlider({
