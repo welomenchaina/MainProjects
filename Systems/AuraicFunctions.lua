@@ -171,7 +171,7 @@ function funcs:EnableAntiAFK()
         task.spawn(function()
             VirtualUser:CaptureController()
             VirtualUser:ClickButton2(Vector2.new(0, 0))
-            task.wait(randomDelay(0.8, 1.5)) -- random delay to mimic human timing
+            task.wait(randomDelay(0.8, 1.5)) 
         end)
     end)
 end

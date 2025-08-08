@@ -224,6 +224,38 @@ local AntiAfk = Player:CreateToggle({
     end
 }, "AntiAFK")
 
+local BlockRemote = Player:CreateInput({
+    Name = "Block Remote",
+    Description = "Will stop entered remote from being used by the game",
+    PlaceholderText = "game.ReplicatedStorage...",
+    CurrentValue = "Remote",
+    Numeric = false,
+    MaxCharacters = nil,
+    Enter = false,
+    Callback = function(Text)
+        if not Text or Text == "" then return end
+    end
+init:BlockRemote(Text)
+    
+    end
+}, "BlockRemote")
+
+local BlockRemote = Player:CreateInput({
+    Name = "Unblock Remote",
+    Description = "Will let entered remote from being used by the game",
+    PlaceholderText = "game.ReplicatedStorage...",
+    CurrentValue = "Remote",
+    Numeric = false,
+    MaxCharacters = nil,
+    Enter = false,
+    Callback = function(Text)
+        if not Text or Text == "" then return end
+    end
+init:UnblockRemote(Text)
+    
+    end
+}, "UnblockRemote")
+
 UiMenu:BuildConfigSection()
 UiMenu:BuildThemeSection() 
 
