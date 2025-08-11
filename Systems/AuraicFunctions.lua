@@ -1,8 +1,10 @@
 getgenv().jumpPowerEnabled = getgenv().jumpPowerEnabled or false
 getgenv().jumpPowerConn = getgenv().jumpPowerConn or nil
-getgenv().
-
-
+getgenv().Presets = {
+    Speed = hum.WalkSpeed or 16,
+    Gravity = workspace.Gravity or 196.2,
+    Health = hum.Health or 1000
+}
 
 local workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
@@ -10,16 +12,6 @@ local funcs = {}
 local plr = game.Players.LocalPlayer
 local char = plr.Character or plr.CharacterAdded:Wait()
 local hum = char:WaitForChild("Humanoid")
-
-getgenv().Presets = {
-    Speed = hum.Walkspeed or 16,
-    Gravity = workspace.Gravity or 196.2,
-    Health = hum.Health or 1000
-}
-
-
-
-
 
 getgenv().toggleJumpPower = function()
     getgenv().jumpPowerEnabled = not getgenv().jumpPowerEnabled
@@ -162,7 +154,7 @@ local VirtualUser = game:GetService("VirtualUser")
 local AntiAFKConnection
 
 local function randomDelay(min, max)
-    return math.random() * (max - min) + min
+    return min + (max - min) * math.random()
 end
 
 function funcs:EnableAntiAFK()
@@ -185,7 +177,7 @@ end
 
 
 function funcs:GetName()
-    return Plr.Name
+    return plr.Name 
 end
 
 function funcs:PivotTo(pos)
@@ -198,7 +190,7 @@ end
 
 function funcs:Crash()
     while true do
-        print ("Crashing..")
+        print("Crashing..")
     end
 end
 
@@ -210,13 +202,8 @@ function funcs:Kick(message)
     plr:Kick(message)
 end
 
-
-
-
-
 function funcs:ActivateTags() -- if you are reading this copy the code from there and replace it with the information of your need to tags (clientsided tags)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/welomenchaina/MainProjects/refs/heads/main/Systems/Tags.lua",true))()
 end
-
 
 return funcs
