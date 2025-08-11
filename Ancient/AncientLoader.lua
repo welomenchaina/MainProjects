@@ -121,15 +121,8 @@ UIGroupbox:AddButton({
 })
 
 
-local savedKey = "AncientKey"
-if isfile("AncientKey.txt") then
-    savedKey = readfile("AncientKey.txt")
-    local code = 'script_key="'..savedKey..'";loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/a20bdcf420255424197e2a78fecfc155.lua"))()'
-    loadstring(code)()
-	getgenv().UsingTxtKey = true
-    return
-end
 
+getgenv().UsedTxtKey = false
 if getgenv().UsedTxtKey then
 Library:Unload()
 end

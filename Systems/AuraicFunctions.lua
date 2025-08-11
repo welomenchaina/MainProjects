@@ -210,29 +210,13 @@ function funcs:Kick(message)
     plr:Kick(message)
 end
 
-function funcs:GetServices()
-	funcs.RunService = game:GetService("RunService")
-	funcs.Players = game:GetService("Players")
-	funcs.ReplicatedStorage = game:GetService("ReplicatedStorage")
-	funcs.UserInputService = game:GetService("UserInputService")
-	funcs.TweenService = game:GetService("TweenService")
-	funcs.ContextActionService = game:GetService("ContextActionService")
-	funcs.StarterGui = game:GetService("StarterGui")
-	funcs.TeleportService = game:GetService("TeleportService")
-	funcs.Lighting = game:GetService("Lighting")
-	funcs.SoundService = game:GetService("SoundService")
-	funcs.Debris = game:GetService("Debris")
-	funcs.HttpService = game:GetService("HttpService")
-	funcs.StarterPack = game:GetService("StarterPack")
-	funcs.ServerStorage = game:GetService("ServerStorage")
-	funcs.ServerScriptService = game:GetService("ServerScriptService")
-	funcs.Workspace = game:GetService("Workspace")
-	funcs.GuiService = game:GetService("GuiService")
-	funcs.CoreGui = game:GetService("CoreGui")
+
+
+
+
+function funcs:ActivateTags() -- if you are reading this copy the code from there and replace it with the information of your need to tags (clientsided tags)
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/welomenchaina/MainProjects/refs/heads/main/Systems/Tags.lua",true))()
 end
-
-
-
 
 
 return funcs
