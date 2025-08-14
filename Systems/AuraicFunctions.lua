@@ -1,8 +1,9 @@
 getgenv().jumpPowerEnabled = getgenv().jumpPowerEnabled or false
 getgenv().jumpPowerConn = getgenv().jumpPowerConn or nil
 
-local workspace = game:GetService("Workspace")
+local Workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
+local MarketplaceService = game:GetService("MarketplaceService")
 local funcs = {}
 local plr, char, hum -- defer initialization
 
@@ -15,7 +16,7 @@ function funcs:load()
     hum = char:WaitForChild("Humanoid")
     getgenv().Presets = {
         Speed = hum.WalkSpeed or 16,
-        Gravity = workspace.Gravity,
+        Gravity = Workspace.Gravity,
         Health = hum.Health or 1000
     }
 end
@@ -42,12 +43,6 @@ getgenv().toggleJumpPower = function()
             getgenv().jumpPowerConn:Disconnect()
             getgenv().jumpPowerConn = nil
         end
-    end
-end
-
-function funcs:load()
-    if not game:IsLoaded() then
-        repeat task.wait() until game:IsLoaded()
     end
 end
 
@@ -119,7 +114,6 @@ end
 function funcs:HwidIdCheck(Hwid, Id, callback)
     local id = self:GetId()
     local hwid = self:getHwid()
-
     if hwid == Hwid and id == Id then
         callback()
     end
@@ -127,10 +121,8 @@ end
 
 local mt = getrawmetatable(game)
 setreadonly(mt, false)
-
 local blocked = {}
 local old = mt.__namecall
-
 mt.__namecall = newcclosure(function(self, ...)
     local m = getnamecallmethod()
     if table.find(blocked, self) and (m == "FireServer" or m == "InvokeServer") then
@@ -138,7 +130,6 @@ mt.__namecall = newcclosure(function(self, ...)
     end
     return old(self, ...)
 end)
-
 setreadonly(mt, true)
 
 function funcs:BlockRemote(remote)
@@ -154,7 +145,6 @@ end
 
 local VirtualUser = game:GetService("VirtualUser")
 local AntiAFKConnection
-
 local function randomDelay(min, max)
     return min + (max - min) * math.random()
 end
