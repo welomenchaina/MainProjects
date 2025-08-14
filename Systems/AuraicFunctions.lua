@@ -1,22 +1,27 @@
 getgenv().jumpPowerEnabled = getgenv().jumpPowerEnabled or false
 getgenv().jumpPowerConn = getgenv().jumpPowerConn or nil
 
-
 local workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
 local funcs = {}
-local plr = game.Players.LocalPlayer
-local char = plr.Character or plr.CharacterAdded:Wait()
-local hum = char:WaitForChild("Humanoid")
-getgenv().Presets = {
-    Speed = hum.WalkSpeed or 16,
-    Gravity = workspace.Gravity,
-    Health = hum.Health or 1000
-}
+local plr, char, hum -- defer initialization
+
+function funcs:load()
+    if not game:IsLoaded() then
+        repeat task.wait() until game:IsLoaded()
+    end
+    plr = Players.LocalPlayer
+    char = plr.Character or plr.CharacterAdded:Wait()
+    hum = char:WaitForChild("Humanoid")
+    getgenv().Presets = {
+        Speed = hum.WalkSpeed or 16,
+        Gravity = workspace.Gravity,
+        Health = hum.Health or 1000
+    }
+end
 
 getgenv().toggleJumpPower = function()
     getgenv().jumpPowerEnabled = not getgenv().jumpPowerEnabled
-
     local function applyJumpPower()
         hum.UseJumpPower = true
         getgenv().jumpPowerConn = hum:GetPropertyChangedSignal("UseJumpPower"):Connect(function()
@@ -25,7 +30,6 @@ getgenv().toggleJumpPower = function()
             end
         end)
     end
-
     if getgenv().jumpPowerEnabled then
         applyJumpPower()
         plr.CharacterAdded:Connect(function(c)
@@ -61,19 +65,16 @@ function funcs:getCoreParts()
         LeftUpperLeg = true, LeftLowerLeg = true, LeftFoot = true,
         RightUpperLeg = true, RightLowerLeg = true, RightFoot = true
     }
-
     local out = {}
     for i, v in ipairs(char:GetChildren()) do
         if v:IsA("BasePart") and partsList[v.Name] then
             out[#out + 1] = v
         end
     end
-
     local h = char:FindFirstChildOfClass("Humanoid")
     if h then
         out[#out + 1] = h
     end
-
     return out
 end
 
@@ -176,7 +177,6 @@ function funcs:DisableAntiAFK()
     end
 end
 
-
 function funcs:GetName()
     return plr.Name 
 end
@@ -203,7 +203,7 @@ function funcs:Kick(message)
     plr:Kick(message)
 end
 
-function funcs:ActivateTags() -- if you are reading this copy the code from there and replace it with the information of your need to tags (clientsided tags)
+function funcs:ActivateTags()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/welomenchaina/MainProjects/refs/heads/main/Systems/Tags.lua",true))()
 end
 
