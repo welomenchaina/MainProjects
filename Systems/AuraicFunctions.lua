@@ -1,10 +1,6 @@
 getgenv().jumpPowerEnabled = getgenv().jumpPowerEnabled or false
 getgenv().jumpPowerConn = getgenv().jumpPowerConn or nil
-getgenv().Presets = {
-    Speed = hum.WalkSpeed or 16,
-    Gravity = workspace.Gravity or 196.2,
-    Health = hum.Health or 1000
-}
+
 
 local workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
@@ -12,6 +8,11 @@ local funcs = {}
 local plr = game.Players.LocalPlayer
 local char = plr.Character or plr.CharacterAdded:Wait()
 local hum = char:WaitForChild("Humanoid")
+getgenv().Presets = {
+    Speed = .WalkSpeed or 16,
+    Gravity = workspace.Gravity,
+    Health = hum.Health or 1000
+}
 
 getgenv().toggleJumpPower = function()
     getgenv().jumpPowerEnabled = not getgenv().jumpPowerEnabled
