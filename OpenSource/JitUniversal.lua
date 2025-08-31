@@ -1,269 +1,89 @@
-
-local init = loadstring(game:HttpGet("https://raw.githubusercontent.com/welomenchaina/MainProjects/refs/heads/main/Systems/AuraicFunctions.lua",true))()
-
-init:load()
-
 if not game:IsLoaded() then
-    init:Freeze()
-    task.wait(5)
-    init:Thaw()
+    repeat task.wait() until game:IsLoaded()
 end
 
-local workspace = game:GetService("Workspace")
-local Players = game:GetService("Players")
-local plr = game.Players.LocalPlayer
-local char = plr.Character or plr.CharacterAdded:Wait()
-local hum = char:WaitForChild("Humanoid")
-local team = plr.Team
-local VU = game:GetService("VirtualUser")
+local cloneref = cloneref or function(...) return ... end
+local Players = cloneref(game:GetService("Players"))
+local Lp = cloneref(Players.LocalPlayer)
+local Character = cloneref(Lp.Character or Lp.CharacterAdded:Wait())
+local Humanoid = cloneref(Character:WaitForChild("Humanoid"))
+local HumanoidRootPart = cloneref(Character:WaitForChild("HumanoidRootPart"))
+local MarketplaceService = cloneref(game:GetService("MarketplaceService"))
+local placeName = cloneref(MarketplaceService:GetProductInfo(game.PlaceId).Name)
+local Workspace = cloneref(game:GetService("Workspace"))
 
+getgenv().Speed = nil
+getgenv().Gravity = nil
+getgenv().JumpPower = nil
 
-local Luna = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nebula-Softworks/Luna-Interface-Suite/refs/heads/master/source.lua", true))()
+getgenv().Presets = {
+    WalkSpeed = getgenv().Speed or Humanoid.WalkSpeed,
+    Gravity = getgenv().Gravity or Workspace.Gravity,
+    JumpPower = getgenv().JumpPower or Humanoid.JumpPower
+}
 
-local Window = Luna:CreateWindow({
-    Name = "Jit Universal,
-    Subtitle = nil,
-    LogoID = "122945680110913",
-    LoadingEnabled = true,
-    LoadingTitle = "Jit Universal",
-    LoadingSubtitle = "We are humans, not horses",
-
-    ConfigSettings = {
-        RootFolder = nil,
-        ConfigFolder = "JitUniversal"
-    },
-
-    KeySystem = false,
-    KeySettings = {
-        Title = "Luna Example Key",
-        Subtitle = "Key System",
-        Note = "Best Key System Ever! Also, Please Use A HWID Keysystem like Pelican, Luarmor etc. that provide key strings based on your HWID since putting a simple string is very easy to bypass",
-        SaveInRoot = false,
-        SaveKey = true,
-        Key = {"Example Key"},
-        SecondAction = {
-            Enabled = true,
-            Type = "Link",
-            Parameter = ""
-        }
-    }
-})
-
-Window:CreateHomeTab({
-    SupportedExecutors = {"Wave", "Delta", "Swift", "Xenith"}, 
-    DiscordInvite = "w7CxvgbK4Z", 
-    Icon = 2, 
-})
-
-local Credits = Window:CreateTab({
-    Name = "Credits",
-    Icon = "album",
-    ImageSource = "Lucide",
-    ShowTitle = false 
-})
-
-local Player = Window:CreateTab({
-    Name = "Player",
-    Icon = "anchor",
-    ImageSource = "Lucide",
-    ShowTitle = false 
-})
-
-local UiMenu = Window:CreateTab({
-    Name = "Ui Menu",
-    Icon = "cross",
-    ImageSource = "Lucide",
-    ShowTitle = false 
-})
-
-Player:CreateSection("Player Exploits")
-Credits:CreateSection("Credits | TY!")
-
-local function Notify(message)
-    Luna:Notification({ 
-        Title = "Jit Universal",
-        Icon = "crown",
-        ImageSource = "Lucide",
-        Content = message
-    })
-end
-
-Notify("Welcome To Jit Universal!")
-
-Credits:CreateDivider()
-
-local Label = Credits:CreateLabel({
-    Text = "Creator - Waylon (@waylontheevident on discord)",
-    Style = 2 
-})
-
-Credits:CreateDivider()
-
-local ResetButton = Player:CreateButton({
-    Name = "Reset",
-    Description = nil, 
-    Callback = function()
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
-    humanoid:ChangeState(Enum.HumanoidStateType.Dead)
+spawn(function()
+    while true do
+        task.wait(0.03) 
+        Humanoid.WalkSpeed = getgenv().Presets.WalkSpeed
+        Workspace.Gravity = getgenv().Presets.Gravity
+        Humanoid.JumpPower = getgenv().Presets.JumpPower
+        Humanoid.UseJumpPower = true
     end
-})
-
-local TpToolGiver = Player:CreateInput({
-    Name = "Tp-Tool Giver",
-    PlaceholderText = "Name Of Tool",
-    CurrentValue = "TpTool",
-    Numeric = false,
-    Enter = false,
-    Callback = function(Text)
-        if not Text or Text == "" then return end
-
-        local tool = Instance.new("Tool")
-        tool.RequiresHandle = false
-        tool.Name = Text
-
-        local function teleportTo(pos)
-            local char = plr.Character
-            if char and char:FindFirstChild("HumanoidRootPart") then
-                char:PivotTo(CFrame.new(pos + Vector3.new(0, 5, 0)))
-            end
-        end
-
-        tool.Activated:Connect(function()
-            local mouse = plr:GetMouse()
-            local conn1, conn2
-
-            conn1 = game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
-                if gpe then return end
-                if input.UserInputType == Enum.UserInputType.Touch then
-                    local ray = workspace.CurrentCamera:ScreenPointToRay(input.Position.X, input.Position.Y)
-                    local part, pos = workspace:FindPartOnRayWithIgnoreList(Ray.new(ray.Origin, ray.Direction * 1000), {plr.Character})
-                    if pos then teleportTo(pos) end
-                    conn1:Disconnect()
-                end
-            end)
-
-            conn2 = mouse.Button1Down:Connect(function()
-                local hit = mouse.Hit
-                if hit then teleportTo(hit.Position) end
-                conn2:Disconnect()
-            end)
-        end)
-
-        tool.Parent = plr.Backpack
-    end
-}, "tptoolgiver")
-
-
-
-
-local SpeedChanger = Player:CreateSlider({
-    Name = "Speed Changer",
-    Range = {0, 250},
-    Increment = 1,
-    CurrentValue = hum.Walkspeed,
-    Callback = function(Value)
-        if hum and hum.WalkSpeed then
-            hum.WalkSpeed = Value
-        elseif char and char:FindFirstChild("Humanoid") then
-            char.Humanoid.WalkSpeed = Value
-        end
-    end
-}, "Walkspeed")
-
-local GravityChanger = Player:CreateSlider({
-    Name = "Gravity Changer",
-    Range = {0, 500}, 
-    Increment = 1,
-    CurrentValue = workspace.Gravity,
-    Callback = function(Value)
-        if workspace.Gravity then
-        workspace.Gravity = Value
-        end
-    end
-}, "Gravity")
-
-
-local FreezeThaw = Player:CreateToggle({
-    Name = "Freeze Yourself",
-    CurrentValue = false,
-    Callback = function(Value)
-        if Value then
-            init:Freeze()
-        else
-            init:Thaw()
-        end
-    end
-}, "Freezer/Thawer")
-
-
-Players.LocalPlayer.Idled:Connect(function()
-    VU:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-    task.wait()
-    VU:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
 end)
 
-local connection
-
-local AntiAfk = Player:CreateToggle({
-    Name = "Anti-AFK",
-    Description = nil,
-    CurrentValue = false,
-    Callback = function(Value)
-        if Value then
-            connection = game:GetService("Players").LocalPlayer.Idled:Connect(function()
-                VU:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-                task.wait()
-                VU:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-            end)
-        else
-            if connection then
-                connection:Disconnect()
-                connection = nil
-            end
-        end
-    end
-}, "AntiAFK")
-
-local BlockRemote = Player:CreateInput({
-    Name = "Block Remote",
-    Description = "Will stop entered remote from being used by the game",
-    PlaceholderText = "game.ReplicatedStorage...",
-    CurrentValue = "Remote",
-    Numeric = false,
-    MaxCharacters = nil,
-    Enter = false,
-    Callback = function(Text)
-        if not Text or Text == "" then return end
-    end
-init:BlockRemote(Text)
-    
-    end
-}, "BlockRemote")
-
-local BlockRemote = Player:CreateInput({
-    Name = "Unblock Remote",
-    Description = "Will let entered remote from being used by the game",
-    PlaceholderText = "game.ReplicatedStorage...",
-    CurrentValue = "Remote",
-    Numeric = false,
-    MaxCharacters = nil,
-    Enter = false,
-    Callback = function(Text)
-        if not Text or Text == "" then return end
-    end
-init:UnblockRemote(Text)
-    
-    end
-}, "UnblockRemote")
-
-UiMenu:BuildConfigSection()
-UiMenu:BuildThemeSection() 
 
 
-local UiDestroy = UiMenu:CreateButton({
-    Name = "Destroy Ui",
-    Description = nil, 
-    Callback = function()
-Luna:Destroy()
-    end
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Lateral Hub",
+   LoadingTitle = "TRAIN THAT SHIT *Augh..*",
+   LoadingSubtitle = "Gooning Lair 🤜🥩",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = "LateralHub",
+      FileName = "KaydenceAndFaelen"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "",
+      RememberJoins = false
+   },
+   KeySystem = true
 })
+
+local main = Window:CreateTab("Main", 4483362458) 
+
+local Input = Tab:CreateInput({
+    Name = "Walkspeed Changer",
+    CurrentValue = "",
+    PlaceholderText = "60",
+    RemoveTextAfterFocusLost = true,
+    Flag = "Input1",
+    Callback = function(Text)
+getgenv().Speed = Text
+    end,
+ })
+
+ local Input = Tab:CreateInput({
+    Name = "JumpPower Changer",
+    CurrentValue = "",
+    PlaceholderText = "196.2",
+    RemoveTextAfterFocusLost = true,
+    Flag = "Input2",
+    Callback = function(Text)
+getgenv().JumpPower = Text
+    end,
+ })
+ 
+ local Input = Tab:CreateInput({
+    Name = "Gravity Changer",
+    CurrentValue = "",
+    PlaceholderText = "196.2",
+    RemoveTextAfterFocusLost = true,
+    Flag = "Input3",
+    Callback = function(Text)
+getgenv().Gravity = Text
+    end,
+ })
