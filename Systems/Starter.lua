@@ -31,7 +31,7 @@ getgenv().Settings = {
 getgenv().Services = {
     HttpService = game:GetService("HttpService"),
     RunService = game:GetService("RunService")
-    ]
+}
 
 local Settings = getgenv().Settings
 local Services = getgenv().Services
