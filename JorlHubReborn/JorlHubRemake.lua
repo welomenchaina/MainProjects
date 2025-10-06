@@ -21,28 +21,28 @@ local Section = Tabs.Main:AddSection("Key System")
 
 Tabs.Main:AddButton({
     Title = "Get Key",
-    Description = "Get The Key [Discord Server]",
+    Description = "Get The Key",
     Callback = function()
         if setclipboard then
-            setclipboard("https://discord.gg/W8tfTZVJ")
+            setclipboard("https://workink.net/20mx/7otrwqoo")
             Fluent:Notify({
                 Title = "Key Copied!",
-                Content = "Discord link copied to clipboard.",
+                Content = "copied to clipboard.",
                 SubContent = "Paste in your browser.",
                 Duration = 10
             })
         elseif toclipboard then
-            toclipboard("https://discord.gg/W8tfTZVJ")
+            toclipboard("https://workink.net/20mx/7otrwqoo")
             Fluent:Notify({
                 Title = "Key Copied!",
-                Content = "Discord link copied",
+                Content = "copied",
                 Duration = 10
             })
         else
             Fluent:Notify({
                 Title = "Low UNC Executor",
                 Content = "Executor does not support clipboard.",
-                SubContent = "https://discord.gg/W8tfTZVJ",
+                SubContent = "https://workink.net/20mx/7otrwqoo",
                 Duration = 10
             })
         end
@@ -57,7 +57,7 @@ local Input = Tabs.Main:AddInput("Input", {
     Numeric = false,
     Finished = true,
     Callback = function(Value)
-        if Value == "RemakeOfJorlHub1233333YOUNGPERSONONTHEBLOCKWHAT" or "RemakeOfJorlHub1233333YOUNGPERSONONTHEBLOCKWHAT " or " RemakeOfJorlHub1233333YOUNGPERSONONTHEBLOCKWHAT" then
+        if Value == "THEKEYISTHISTEXTJUSTCOPYANDPASTEITYOUTHEREWITHTTHELIGHTSKINTONEHEADAHH" or "THEKEYISTHISTEXTJUSTCOPYANDPASTEITYOUTHEREWITHTTHELIGHTSKINTONEHEADAHH " then
             -- Setups (Experimental)
 local cloneref = cloneref or function(a) return a end
 local Players = cloneref(game:GetService("Players")) or game:GetService("Players") or game.Players
