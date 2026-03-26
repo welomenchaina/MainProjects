@@ -1,9 +1,15 @@
+local function obf(f)
+	return newcclosure(function(...)
+		return f(...)
+	end)
+end
+
 local mt = getrawmetatable(game)
 local _nc = mt.__namecall
 local _idx = mt.__index
 setreadonly(mt, false)
 
-mt.__index = newcclosure(function(self, k)
+mt.__index = obf(function(self, k)
 	local src = debug.info(2, "s")
 	if (k == "Source" or k == "Bytecode") and not checkcaller() and src ~= "[C]" then
 		return ""
@@ -11,7 +17,7 @@ mt.__index = newcclosure(function(self, k)
 	return _idx(self, k)
 end)
 
-mt.__namecall = newcclosure(function(self, ...)
+mt.__namecall = obf(function(self, ...)
 	local method = getnamecallmethod()
 	local src = debug.info(2, "s")
 	if not checkcaller() and src ~= "[C]" then
@@ -72,13 +78,11 @@ local snap = {
 local function chkGame()
 	local ok, fresh = pcall(function() return mps:GetProductInfo(game.PlaceId) end)
 	if not ok then busted("mps fetch failed") return end
-
 	for key, expectedType in pairs(expectedTypes) do
 		if fresh[key] ~= nil and type(fresh[key]) ~= expectedType then
-			busted(key .. " wrong type, expected " .. expectedType .. " got " .. type(fresh[key]))
+			busted(key .. " wrong type")
 		end
 	end
-
 	if fresh.AssetId ~= snap.AssetId then busted("AssetId flipped") end
 	if fresh.CreatorId ~= snap.CreatorId then busted("CreatorId changed") end
 	if fresh.Name ~= snap.Name then busted("game name changed") end
@@ -116,16 +120,16 @@ local function chkMt()
 	if cur.__index ~= mt.__index then busted("__index swapped") end
 end
 
-run.Heartbeat:Connect(chkMt)
+run.Heartbeat:Connect(obf(chkMt))
 
-task.spawn(function()
+task.spawn(obf(function()
 	while task.wait(5) do
 		pcall(chkGc)
 		pcall(chkSpoofs)
 		pcall(chkDebug)
 		pcall(chkGame)
 	end
-end)
+end))
 
 pcall(chkSpoofs)
 pcall(chkDebug)
