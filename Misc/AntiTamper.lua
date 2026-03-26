@@ -1,15 +1,3 @@
-repeat task.wait() until game:IsLoaded()
-
-local lp = game:GetService("Players").LocalPlayer
-local run = game:GetService("RunService")
-local mps = game:GetService("MarketplaceService")
-
-local msg = "cheat detected, get rekt lol"
-
-local function busted(why)
-	warn("[!!] " .. msg .. " | " .. why)
-end
-
 local mt = getrawmetatable(game)
 local _nc = mt.__namecall
 local _idx = mt.__index
@@ -18,7 +6,6 @@ setreadonly(mt, false)
 mt.__index = newcclosure(function(self, k)
 	local src = debug.info(2, "s")
 	if (k == "Source" or k == "Bytecode") and not checkcaller() and src ~= "[C]" then
-		busted("src/bytecode read from " .. tostring(src))
 		return ""
 	end
 	return _idx(self, k)
@@ -27,18 +14,9 @@ end)
 mt.__namecall = newcclosure(function(self, ...)
 	local method = getnamecallmethod()
 	local src = debug.info(2, "s")
-
 	if not checkcaller() and src ~= "[C]" then
-		if method == "require" then
-			busted("require() hook")
-			return nil
-		end
-
-		if method == "Clone" and (self:IsA("LocalScript") or self:IsA("ModuleScript")) then
-			busted("script clone attempt")
-			return nil
-		end
-
+		if method == "require" then return nil end
+		if method == "Clone" and (self:IsA("LocalScript") or self:IsA("ModuleScript")) then return nil end
 		if method == "GetDescendants" or method == "GetChildren" then
 			local res = _nc(self, ...)
 			if type(res) == "table" then
@@ -53,13 +31,21 @@ mt.__namecall = newcclosure(function(self, ...)
 			return res
 		end
 	end
-
 	return _nc(self, ...)
 end)
 
 setreadonly(mt, true)
 
-local gameInfo = mps:GetProductInfo(game.PlaceId)
+repeat task.wait() until game:IsLoaded()
+
+local lp = game:GetService("Players").LocalPlayer
+local run = game:GetService("RunService")
+local mps = game:GetService("MarketplaceService")
+
+local msg = "cheat detected, get rekt lol"
+local function busted(why)
+	warn("[!!] " .. msg .. " | " .. why)
+end
 
 local expectedTypes = {
 	Name = "string",
@@ -76,6 +62,7 @@ local expectedTypes = {
 	IsPublicDomain = "boolean",
 }
 
+local gameInfo = mps:GetProductInfo(game.PlaceId)
 local snap = {
 	AssetId = gameInfo.AssetId,
 	CreatorId = gameInfo.CreatorId,
@@ -104,7 +91,7 @@ end
 local function chkGc()
 	local n = 0
 	for _, f in ipairs(getgc()) do
-		if type(f) == "function" and not islclosure(f) then n+=1 end
+		if type(f) == "function" and not islclosure(f) then n += 1 end
 	end
 	if n > 5000 then busted("gc flooded: " .. n) end
 end
